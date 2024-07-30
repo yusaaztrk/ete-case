@@ -1,22 +1,15 @@
-
 module.exports = {
   preset: 'react-native',
-  setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect'],
-  "setupFiles": ["<rootDir>/jest/setup.js"],
   transformIgnorePatterns: [
-    'node_modules/(?!((jest-)?react-native|@react-native(-community)?)/),(?!(react-native|react-native-vector-icons)/)',
-    
-  
+    'node_modules/(?!(react-native|@react-native|@react-native-community|react-native-vector-icons|react-native-radio-buttons-group)/)',
   ],
-  moduleNameMapper: {
-    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)$': 'identity-obj-proxy',
-    
-  },
   transform: {
-    "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
-    
+    '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
   },
-  collectCoverage: true,
-  coverageReporters: ['json', 'lcov', 'text', 'clover'],
-  
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect'],
+  moduleNameMapper: {
+    '\\.(jpg|jpeg|png|gif|svg)$': '<rootDir>/__mocks__/fileMock.js', // Resim dosyalarını mocklayın
+    '^@react-native-async-storage/async-storage$': '<rootDir>/__mocks__/@react-native-async-storage/async-storage.js',
+  },
 };

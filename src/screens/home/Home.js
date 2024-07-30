@@ -1,3 +1,4 @@
+// In Home.js
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Modal, Dimensions, FlatList } from 'react-native';
 import axios from 'axios';
@@ -7,6 +8,44 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import ProductCard from '../../components/ProductCard';
 import { RadioGroup } from 'react-native-radio-buttons-group';
 import CheckBox from '@react-native-community/checkbox';
+
+export const sortAndFilterProducts = (products, searchTerm, selectedSort, selectedBrands, selectedModels, modelSearchTerm) => {
+    let filteredProducts = [...products].filter(product =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    if (Object.keys(selectedBrands).some(key => selectedBrands[key])) {
+        filteredProducts = filteredProducts.filter(product => selectedBrands[product.brand]);
+    }
+
+    if (modelSearchTerm) {
+        filteredProducts = filteredProducts.filter(product =>
+            product.model.toLowerCase().includes(modelSearchTerm.toLowerCase())
+        );
+    }
+
+    if (Object.keys(selectedModels).some(key => selectedModels[key])) {
+        filteredProducts = filteredProducts.filter(product => selectedModels[product.model]);
+    }
+
+    switch (selectedSort) {
+        case '1':
+            filteredProducts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            break;
+        case '2':
+            filteredProducts.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+            break;
+        case '3':
+            filteredProducts.sort((a, b) => a.price - b.price);
+            break;
+        case '4':
+            filteredProducts.sort((a, b) => b.price - a.price);
+            break;
+        default:
+    }
+
+    return filteredProducts;
+};
 
 const Home = ({ navigation }) => {
     const [modalVisible, setModalVisible] = useState(false);
@@ -42,40 +81,8 @@ const Home = ({ navigation }) => {
     }, []);
 
     useEffect(() => {
-        let filteredProducts = [...products].filter(product =>
-            product.name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-
-
-        
-        if (Object.keys(selectedBrands).some(key => selectedBrands[key])) {
-            filteredProducts = filteredProducts.filter(product => selectedBrands[product.brand]);
-        }
-
-        if (modelSearchTerm) {
-            filteredProducts = filteredProducts.filter(product =>
-                product.model.toLowerCase().includes(modelSearchTerm.toLowerCase())
-            );
-        }
-
-        switch (selectedSort) {
-            case '1':
-                filteredProducts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                break;
-            case '2':
-                filteredProducts.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-                break;
-            case '3':
-                filteredProducts.sort((a, b) => a.price - b.price);
-                break;
-            case '4':
-                filteredProducts.sort((a, b) => b.price - a.price);
-                break;
-            default:
-        }
-
-        setFilteredProducts(filteredProducts);
-    }, [products, searchTerm, selectedSort, selectedBrands,selectedModels,modelSearchTerm]);
+        setFilteredProducts(sortAndFilterProducts(products, searchTerm, selectedSort, selectedBrands, selectedModels, modelSearchTerm));
+    }, [products, searchTerm, selectedSort, selectedBrands, selectedModels, modelSearchTerm]);
 
     const handleSortChange = (value) => {
         setSelectedSort(value);
@@ -93,109 +100,61 @@ const Home = ({ navigation }) => {
         setModelSearchTerm(text);
     };
 
-    const handleProductSelect = (id,name, price, image, description) => {
-        navigation.navigate("Detail", { id,name, price, image, description });
+    const handleProductSelect = (id, name, price, image, description) => {
+        navigation.navigate("Detail", { id, name, price, image, description });
     };
+
     const handleBrandCheckBoxChange = (brand) => {
         setSelectedBrands((prevSelectedBrands) => ({
             ...prevSelectedBrands,
             [brand]: !prevSelectedBrands[brand],
         }));
     };
-    
+
     const handleModelCheckBoxChange = (model) => {
         setSelectedModels((prevSelectedModels) => ({
             ...prevSelectedModels,
             [model]: !prevSelectedModels[model],
         }));
     };
- 
+
     const renderProduct = ({ item }) => (
         <ProductCard
             product={item}
-            onSelect={() => handleProductSelect( item.id, item.name, item.price, item.image, item.description)}
+            onSelect={() => handleProductSelect(item.id, item.name, item.price, item.image, item.description)}
             navigation={navigation}
         />
     );
 
-    /*const renderBrandItem = ({ item }) => (
-        <View>
-            <View style={styles.checkBox_container}>
-                <CheckBox
-                    value={selectedBrands[item.brand] || false}
-                    onValueChange={() => handleBrandCheckBoxChange(item.brand)}
-                />
-                <Text style={styles.itemText}>{item.brand}</Text>
-            </View>
-        </View>
-    );
-
-    const renderModelItem = ({item}) =>(
-        <View>
-            <View style={styles.checkBox_container}>
-                <CheckBox
-                    value={selectedModels[item.model] || false}
-                    onValueChange={() => handleModelCheckBoxChange(item.model)}
-                />
-                <Text style={styles.itemText}>{item.model}</Text>
-            </View>
-        </View>
-    )*/
-
-    const offBtn = () =>{
-        setModalVisible(!modalVisible)
-        setBrandSearchTerm("")
-        setModelSearchTerm("")
-
-    }
-
+    const offBtn = () => {
+        setModalVisible(!modalVisible);
+        setBrandSearchTerm("");
+        setModelSearchTerm("");
+    };
 
     const uniqueBrands = Array.from(new Set(products.map(product => product.brand)));
     const uniqueModels = Array.from(new Set(products.map(product => product.model)));
 
-
     const applyFilters = () => {
-        let filteredProducts = [...products].filter(product =>
-            product.name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-
-        if (Object.keys(selectedBrands).some(key => selectedBrands[key])) {
-            filteredProducts = filteredProducts.filter(product => selectedBrands[product.brand]);
-        }
-
-        if (Object.keys(selectedModels).some(key => selectedModels[key])) {
-            filteredProducts = filteredProducts.filter(product => selectedModels[product.model]);
-        }
-
-        switch (selectedSort) {
-            case '1':
-                filteredProducts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                break;
-            case '2':
-                filteredProducts.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-                break;
-            case '3':
-                filteredProducts.sort((a, b) => a.price - b.price);
-                break;
-            case '4':
-                filteredProducts.sort((a, b) => b.price - a.price);
-                break;
-            default:
-        }
-
-        setFilteredProducts(filteredProducts);
+        setFilteredProducts(sortAndFilterProducts(products, searchTerm, selectedSort, selectedBrands, selectedModels, modelSearchTerm));
         setModalVisible(!modalVisible);
     };
 
-    
     return (
         <View style={styles.container}>
             <View style={{ width: Dimensions.get('window').width * 0.9, marginTop: 10 }}>
-                <Search_Bar onChangeText={handleSearchChange} />
+                <Search_Bar
+                    onChangeText={handleSearchChange}
+                    testID="search-bar"
+                />
             </View>
             <View style={styles.button_container}>
                 <Text style={styles.button_container_text}>Filters: </Text>
-                <TouchableOpacity style={styles.button_container_button} onPress={() => setModalVisible(true)}>
+                <TouchableOpacity
+                    style={styles.button_container_button}
+                    testID='setModal'
+                    onPress={() => setModalVisible(true)}
+                >
                     <Text style={{ color: 'black' }}>Select Filter</Text>
                 </TouchableOpacity>
             </View>
@@ -218,7 +177,11 @@ const Home = ({ navigation }) => {
                 <View style={styles.modalContainer}>
                     <View style={styles.header_container}>
                         <View style={styles.header}>
-                            <TouchableOpacity onPress={(offBtn)} style={styles.close_button}>
+                            <TouchableOpacity
+                                onPress={offBtn}
+                                style={styles.close_button}
+                                testID="close-icon"
+                            >
                                 <Icon style={{ color: 'black' }} name="close" size={35} />
                             </TouchableOpacity>
                             <View style={styles.header_title_container}>
@@ -237,6 +200,7 @@ const Home = ({ navigation }) => {
                                     onPress={handleSortChange}
                                     selectedId={selectedSort}
                                     style={styles.radioGroup}
+                                    testID="sort-options"
                                 />
                             </View>
                         </View>
@@ -249,21 +213,25 @@ const Home = ({ navigation }) => {
                             <Text>Brand</Text>
                         </View>
                         <View style={styles.radio_select}>
-                            <Search_Bar onChangeText={handleBrandSearchChange} />
+                            <Search_Bar
+                                onChangeText={handleBrandSearchChange}
+                                testID="brand-search-bar"
+                            />
                             <View style={styles.brand_FlatList}>
-                            <FlatList
-                                data={uniqueBrands.filter(brand => brand.toLowerCase().includes(brandSearchTerm.toLowerCase()))}
-                                renderItem={({ item }) => (
-                                <View style={styles.checkBox_container}>
-                                        <CheckBox
-                                        value={selectedBrands[item] || false}
-                                        onValueChange={() => handleBrandCheckBoxChange(item)}
+                                <FlatList
+                                    data={uniqueBrands.filter(brand => brand.toLowerCase().includes(brandSearchTerm.toLowerCase()))}
+                                    renderItem={({ item }) => (
+                                        <View style={styles.checkBox_container}>
+                                            <CheckBox
+                                                value={selectedBrands[item] || false}
+                                                onValueChange={() => handleBrandCheckBoxChange(item)}
+                                                testID={`brand-checkbox-${item}`}
+                                            />
+                                            <Text style={styles.itemText}>{item}</Text>
+                                        </View>
+                                    )}
+                                    keyExtractor={(item) => item}
                                 />
-                                <Text style={styles.itemText}>{item}</Text>
-                    </View>
-                )}
-                keyExtractor={(item) => item}
-            />
                             </View>
                         </View>
                     </View>
@@ -274,31 +242,36 @@ const Home = ({ navigation }) => {
                             <Text>Model</Text>
                         </View>
                         <View style={styles.radio_select}>
-                            <Search_Bar onChangeText={handleModelSearchChange} />
-                            <View style={styles.brand_FlatList}>
-                            <FlatList
-                                data={uniqueModels.filter(model => model.toLowerCase().includes(modelSearchTerm.toLowerCase()))}
-                                renderItem={({ item }) => (
-                                    <View style={styles.checkBox_container}>
-                                        <CheckBox
-                                            value={selectedModels[item] || false}
-                                            onValueChange={() => handleModelCheckBoxChange(item)}
-                                        />
-                                        <Text style={styles.itemText}>{item}</Text>
-                                    </View>
-                                )}
-                                keyExtractor={(item) => item}
+                            <Search_Bar
+                                onChangeText={handleModelSearchChange}
+                                testID="model-search-bar"
                             />
+                            <View style={styles.brand_FlatList}>
+                                <FlatList
+                                    data={uniqueModels.filter(model => model.toLowerCase().includes(modelSearchTerm.toLowerCase()))}
+                                    renderItem={({ item }) => (
+                                        <View style={styles.checkBox_container}>
+                                            <CheckBox
+                                                value={selectedModels[item] || false}
+                                                onValueChange={() => handleModelCheckBoxChange(item)}
+                                                testID={`model-checkbox-${item}`}
+                                            />
+                                            <Text style={styles.itemText}>{item}</Text>
+                                        </View>
+                                    )}
+                                    keyExtractor={(item) => item}
+                                />
                             </View>
                         </View>
-                        
                     </View>
 
-                        <TouchableOpacity onPress={applyFilters}>
-                                <View style={styles.primary_button_container}>
-                                    <Text style={{ color: 'white', fontSize: 20 }}>Apply</Text>
-                                </View>
-                        </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={applyFilters}
+                        style={styles.apply_button}
+                        testID="applyFilters"
+                    >
+                        <Text>Apply Filters</Text>
+                    </TouchableOpacity>
                 </View>
             </Modal>
         </View>

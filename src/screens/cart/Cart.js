@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, FlatList, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useCart } from '../../Context/CartContext';
 import styles from './Cart_style';
 import Card_button from '../../components/Card_button';
@@ -16,13 +16,21 @@ const Cart = () => {
                 </View>
                 
                 <View style={styles.quantityContainer}>
-                    <TouchableOpacity onPress={() => decrementQuantity(item.id)} style={styles.quantityButton}>
+                    <TouchableOpacity
+                        onPress={() => decrementQuantity(item.id)}
+                        style={styles.quantityButton}
+                        testID={`decrement-button-${item.id}`}
+                    >
                         <Text style={styles.quantityButtonText}>-</Text>
                     </TouchableOpacity>
                     <View style={{backgroundColor:"#2A59FE",width:56,height:42,alignItems:"center",justifyContent:"center"}}>
                         <Text style={styles.quantityText}>{item.quantity}</Text>
                     </View>
-                    <TouchableOpacity onPress={() => incrementQuantity(item.id)} style={styles.quantityButton}>
+                    <TouchableOpacity
+                        onPress={() => incrementQuantity(item.id)}
+                        style={styles.quantityButton}
+                        testID={`increment-button-${item.id}`}
+                    >
                         <Text style={styles.quantityButtonText}>+</Text>
                     </TouchableOpacity>
                 </View>

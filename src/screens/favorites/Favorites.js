@@ -14,7 +14,7 @@ const Favorites = () => {
     const renderFavoriteItem = ({ item }) => (
         <View style={styles.cartItemContainer}>
             <View style={styles.cartItemDetails}>
-                <TouchableOpacity onPress={() => handleToggleFavorite(item)}>
+                <TouchableOpacity testID='star-icon' onPress={() => handleToggleFavorite(item)}>
                     <Icon name='star' size={40} color='gold' />
                 </TouchableOpacity>
                 <Text style={styles.cartItemTitle}>{item.name}</Text>
@@ -26,6 +26,7 @@ const Favorites = () => {
     return (
         <View style={styles.container}>
             <FlatList
+                testID='flatlist'
                 data={favorite}
                 renderItem={renderFavoriteItem}
                 keyExtractor={(item, index) => item?.id?.toString() || index.toString()}
