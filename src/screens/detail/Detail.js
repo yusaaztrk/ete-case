@@ -27,7 +27,11 @@ const Detail = ({ route }) => {
                 <View style={styles.image_container}>
                     <Image source={{ uri: image }} style={{ width: "100%", height: 250 }} />
                     <View style={styles.favorite_button}>
-                        <Favorite_button isFavorite={isFavorite} onPress={handleToggleFavorite} />
+                        <Favorite_button
+                            testID="favorite-button"
+                            isFavorite={isFavorite}
+                            onPress={handleToggleFavorite}
+                        />
                     </View>
                 </View>
                 <Text style={{ fontWeight: "bold", fontSize: 30, color: "black" }}>{name}</Text>
@@ -38,8 +42,10 @@ const Detail = ({ route }) => {
                     <Text style={{ color: "#2A59FE", fontSize: 20 }}>Price:</Text>
                     <Text style={{ fontSize: 15, fontWeight: "bold", color: "black" }}>{price} TL</Text>
                 </View>
-                <TouchableOpacity style={styles.button_container}>
-                    <Card_button addCart={handleAddToCart} name={"Add To Cart"} />
+                <TouchableOpacity
+                    style={styles.button_container}
+                >
+                    <Card_button addCart={handleAddToCart} name={"Add To Cart"} testID={"add-to-cart-button"}/>
                 </TouchableOpacity>
             </View>
         </View>

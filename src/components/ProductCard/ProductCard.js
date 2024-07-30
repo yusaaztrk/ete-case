@@ -32,7 +32,9 @@ const ProductCard = ({ product, onSelect }) => {
                         <Text style={styles.price}>{product.price} TL</Text>
                         <Text style={styles.title}>{product.name}</Text>
                     </View>
-                    <Card_button addCart={handleAddToCart} name={"Add To Cart"} testID="add-to-cart-button" />
+                    <View>
+                        <Card_button addCart={handleAddToCart} name={"Add To Cart"} testID="add-to-cart-button" />
+                    </View>
                 </View>
             </View>
         </TouchableWithoutFeedback>

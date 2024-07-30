@@ -1,4 +1,11 @@
 {
-    "presets": ["module:metro-react-native-babel-preset"]
-  }
-  
+  "presets": [
+    "module:@react-native/babel-preset",
+    "@babel/preset-react"
+  ],
+  "plugins": [
+    "@babel/plugin-transform-react-jsx",
+    "@babel/plugin-transform-react-jsx-source",
+    "@babel/plugin-transform-react-jsx-self"
+  ]
+}
