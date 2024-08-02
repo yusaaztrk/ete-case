@@ -6,23 +6,19 @@ import Icon from 'react-native-vector-icons/Ionicons';
 jest.mock('react-native-vector-icons/Ionicons', () => 'Icon');
 
 describe('Favorite_button', () => {
-  test('renders correctly with isFavorite false', () => {
-    const { getByTestId } = render(<Favorite_button isFavorite={false} onPress={() => {}} />);
-    const button = getByTestId('favorite-button');
-    expect(button).toBeTruthy();
-  });
+
+  
+    test('renders gold icon when isFavorite is true', () => {
+      const { getByTestId } = render(<Favorite_button isFavorite={true} onPress={() => {}} />);
+      const icon = getByTestId('favorite-button').findByType(Icon);
+      expect(icon.props.color).toBe('gold');
+    });
 
   test('calls onPress when button is pressed', () => {
     const onPressMock = jest.fn();
     const { getByTestId } = render(<Favorite_button isFavorite={false} onPress={onPressMock} />);
     fireEvent.press(getByTestId('favorite-button'));
     expect(onPressMock).toHaveBeenCalled();
-  });
-
-  test('renders gold icon when isFavorite is true', () => {
-    const { getByTestId } = render(<Favorite_button isFavorite={true} onPress={() => {}} />);
-    const icon = getByTestId('favorite-button').findByType(Icon);
-    expect(icon.props.color).toBe('gold');
   });
 
   test('renders grey icon when isFavorite is false', () => {

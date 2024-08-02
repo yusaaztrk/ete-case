@@ -71,6 +71,18 @@ const styles = StyleSheet.create({
         alignItems:"center",
         justifyContent:"center"
     },
+
+    primary_button:{
+        fontSize:25,
+        alignSelf:"center",
+        color:"white",
+        fontWeight:"bold",
+        backgroundColor:"#2A59FE",
+        width:"90%",
+        textAlign:"center",
+        borderRadius:10,
+        height:40
+    },
     radio_select:{
         height:Dimensions.get("screen").height/4.5,
         marginLeft:"10%",
@@ -93,13 +105,11 @@ const styles = StyleSheet.create({
         alignItems:"flex-start",
         marginTop:5,
     },
-sortBy_container: {
+    sortBy_container: {
         alignItems: "flex-start",
         marginTop: 5,
     },
 
-    // RadioGroup stilini doğrudan özelleştirmek mümkün olmadığından,
-    // sadece radio butonlarının içini mavi yapmak için RadioButton stilini değiştireceğiz.
     radioGroup: {
         borderColor: "blue",
     },
@@ -135,6 +145,9 @@ sortBy_container: {
     checkBox_container:{
         flexDirection:"row",
         alignItems:"center"
+    },
+
+    apply_button:{
     }
 });
 
