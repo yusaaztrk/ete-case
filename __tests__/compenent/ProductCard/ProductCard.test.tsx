@@ -3,7 +3,6 @@ import { render, fireEvent } from '@testing-library/react-native';
 import ProductCard from '../../../src/components/ProductCard';
 import { useCart } from '../../../src/Context/CartContext';
 
-// Mock useCart hook
 jest.mock('../../../src/Context/CartContext', () => ({
   useCart: jest.fn(),
 }));
@@ -19,7 +18,7 @@ describe('ProductCard', () => {
   const mockOnSelect = jest.fn();
   const mockAddToCart = jest.fn();
   const mockToggleFavorite = jest.fn();
-  const mockFavorite = [{ id: '1' }]; // Product is already in favorites
+  const mockFavorite = [{ id: '1' }]; 
 
   beforeEach(() => {
     (useCart as jest.Mock).mockReturnValue({
@@ -47,7 +46,6 @@ describe('ProductCard', () => {
       <ProductCard product={mockProduct} onSelect={mockOnSelect} />
     );
 
-    // Ensure favorite-button is found
     const favoriteButton = getByTestId('favorite-button');
     expect(favoriteButton).toBeTruthy();
 
@@ -61,7 +59,6 @@ describe('ProductCard', () => {
       <ProductCard product={mockProduct} onSelect={mockOnSelect} />
     );
 
-    // Ensure add-to-cart-button is found
     const addButton = getByTestId('add-to-cart-button');
     expect(addButton).toBeTruthy();
 

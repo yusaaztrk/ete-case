@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import ProductCard from '../../components/ProductCard';
 import { RadioGroup } from 'react-native-radio-buttons-group';
 import CheckBox from '@react-native-community/checkbox';
+import Card_button from '../../components/Card_button';
 
 export const sortAndFilterProducts = (products, searchTerm, selectedSort, selectedBrands, selectedModels, modelSearchTerm) => {
     let filteredProducts = [...products].filter(product =>
@@ -65,7 +66,7 @@ const Home = ({ navigation }) => {
         { id: '4', label: 'Price High to Low', value: 'priceDesc' }
     ];
 
-    const API_URL = "https://5fc9346b2af77700165ae514.mockapi.io/products";
+    const API_URL = "http://10.0.2.2:3000/products";
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -270,7 +271,7 @@ const Home = ({ navigation }) => {
                         style={styles.apply_button}
                         testID="applyFilters"
                     >
-                        <Text>Apply Filters</Text>
+                        <Text style={styles.primary_button}>Primary</Text>
                     </TouchableOpacity>
                 </View>
             </Modal>
